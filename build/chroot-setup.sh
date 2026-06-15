@@ -9,14 +9,14 @@ set -euo pipefail
 B=/nova-build/branding
 soft() { "$@" || echo "WARN: non-fatal step failed: $*"; }
 
-echo "==> locales + base config"
+export DEBIAN_FRONTEND=noninteractive
+echo "==> apt update + locales (minbase has no locale-gen until 'locales' is in)"
+apt-get update -q
+apt-get install -y --no-install-recommends locales
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 update-locale LANG=en_US.UTF-8
 echo "nova" > /etc/hostname
-
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -q
 
 echo "==> base live system + bootloaders (signed Secure Boot chain)"
 apt-get install -y --no-install-recommends \
@@ -32,17 +32,16 @@ apt-get install -y --no-install-recommends linux-generic-hwe-24.04 \
 
 echo "==> GNOME desktop (minimal, no Ubuntu clutter)"
 apt-get install -y --no-install-recommends \
-  gnome-shell gnome-session gnome-shell-extension-prefs \
-  gdm3 nautilus gnome-control-center gnome-system-monitor \
-  gnome-disk-utility gnome-text-editor file-roller \
+  gnome-shell gnome-session gdm3 nautilus \
+  gnome-control-center gnome-system-monitor \
   plymouth plymouth-themes zenity \
-  fonts-inter xdg-user-dirs dconf-cli librsvg2-bin \
-  gnome-software-properties software-properties-gtk \
-  unattended-upgrades
+  xdg-user-dirs dconf-cli librsvg2-bin \
+  software-properties-gtk unattended-upgrades
 
-# Nice-to-haves (don't fail the build if a name drifts)
-soft apt-get install -y --no-install-recommends gnome-shell-extension-dashtodock
-soft apt-get install -y --no-install-recommends gnome-maps gnome-weather
+# Nice-to-haves (never fail the build if a package name drifts)
+soft apt-get install -y --no-install-recommends \
+  gnome-shell-extension-prefs gnome-disk-utility gnome-text-editor \
+  file-roller fonts-inter gnome-shell-extension-dashtodock gnome-maps
 
 echo "==> Calamares installer"
 apt-get install -y --no-install-recommends calamares || apt-get install -y calamares
@@ -54,15 +53,16 @@ if curl -fsSL https://packages.mozilla.org/apt/repo-signing-key.gpg -o /etc/apt/
     > /etc/apt/sources.list.d/mozilla.list
   printf 'Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000\n' \
     > /etc/apt/preferences.d/mozilla
-  apt-get update -q && soft apt-get install -y firefox
+  apt-get update -q || true
+  soft apt-get install -y firefox
 fi
 
 echo "==> Wine + .exe support (WineHQ, i386 multiarch)"
 dpkg --add-architecture i386
 if curl -fsSL https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key; then
   curl -fsSL https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources \
-    -o /etc/apt/sources.list.d/winehq-noble.sources
-  apt-get update -q
+    -o /etc/apt/sources.list.d/winehq-noble.sources || true
+  apt-get update -q || true
   soft apt-get install -y --install-recommends winehq-stable
 fi
 # Fallback to the distro wine if WineHQ didn't take.
@@ -125,7 +125,7 @@ echo "==> auto-updates"
 systemctl enable unattended-upgrades 2>/dev/null || true
 
 echo "==> services"
-systemctl set-default graphical.target
+systemctl set-default graphical.target || true
 systemctl enable gdm3 2>/dev/null || systemctl enable gdm 2>/dev/null || true
 systemctl enable NetworkManager 2>/dev/null || true
 
