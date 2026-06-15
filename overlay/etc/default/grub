@@ -1,0 +1,8 @@
+# NOVA boot defaults — hidden menu, silent splash, no "Ubuntu" wording.
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=0
+GRUB_TIMEOUT_STYLE=hidden
+GRUB_DISTRIBUTOR="NOVA"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash vt.global_cursor_default=0"
+GRUB_CMDLINE_LINUX=""
+GRUB_GFXPAYLOAD_LINUX=keep

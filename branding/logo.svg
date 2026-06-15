@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Squircle background gradient: deep indigo -> violet -> magenta -->
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#241046"/>
+      <stop offset="0.45" stop-color="#6D28D9"/>
+      <stop offset="0.80" stop-color="#C026D3"/>
+      <stop offset="1" stop-color="#F0529C"/>
+    </linearGradient>
+    <!-- Soft glow behind the spark -->
+    <radialGradient id="glow" cx="0.5" cy="0.46" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#FFE9F6" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFE9F6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spark" x1="256" y1="120" x2="256" y2="392" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFE3F3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App-icon squircle -->
+  <path d="M256 16
+           C120 16 16 120 16 256
+           C16 392 120 496 256 496
+           C392 496 496 392 496 256
+           C496 120 392 16 256 16 Z"
+        fill="url(#bg)"/>
+
+  <!-- Glow -->
+  <circle cx="256" cy="238" r="170" fill="url(#glow)"/>
+
+  <!-- Nova spark: a sharp 4-point star (the burst of a new star) -->
+  <path d="M256 116
+           C262 196 270 224 312 246
+           C356 268 372 270 396 256
+           C372 270 356 272 312 294
+           C270 316 262 344 256 396
+           C250 344 242 316 200 294
+           C156 272 140 270 116 256
+           C140 270 156 268 200 246
+           C242 224 250 196 256 116 Z"
+        fill="url(#spark)"/>
+
+  <!-- Small secondary spark for a sense of motion -->
+  <path d="M372 150
+           C374 178 378 188 392 196
+           C378 204 374 214 372 242
+           C370 214 366 204 352 196
+           C366 188 370 178 372 150 Z"
+        fill="#FFFFFF" fill-opacity="0.9"/>
+</svg>

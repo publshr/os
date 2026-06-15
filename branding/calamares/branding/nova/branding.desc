@@ -1,0 +1,38 @@
+---
+componentName: nova
+
+# No "Calamares" in the welcome text; use NOVA's name everywhere.
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: fullscreen
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "NOVA"
+    shortProductName:    "NOVA"
+    version:             "1.0"
+    shortVersion:        "1.0"
+    versionedName:       "NOVA 1.0"
+    shortVersionedName:  "NOVA"
+    bootloaderEntryName: "NOVA"
+    productUrl:          "https://nova-os.dev/"
+    supportUrl:          ""
+    knownIssuesUrl:      ""
+    releaseNotesUrl:     ""
+    donateUrl:           ""
+
+images:
+    productLogo:    "logo.png"
+    productIcon:    "logo.png"
+    productWelcome: "welcome.png"
+
+slideshow:    "show.qml"
+slideshowAPI: 2
+
+style:
+    sidebarBackground:    "#170B33"
+    sidebarText:          "#FFFFFF"
+    sidebarTextSelect:    "#6D28D9"
+    sidebarTextHighlight: "#C026D3"

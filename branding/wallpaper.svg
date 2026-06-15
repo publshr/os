@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2560" height="1440" viewBox="0 0 2560 1440" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="sky" cx="0.62" cy="0.40" r="0.85">
+      <stop offset="0" stop-color="#2A1659"/>
+      <stop offset="0.40" stop-color="#170B33"/>
+      <stop offset="1" stop-color="#080414"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#C95BE0" stop-opacity="0.55"/>
+      <stop offset="0.45" stop-color="#7C3AED" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spark" x1="1560" y1="430" x2="1560" y2="1010" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F6C9EC"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2560" height="1440" fill="url(#sky)"/>
+
+  <!-- soft nebula halo -->
+  <circle cx="1560" cy="720" r="620" fill="url(#halo)"/>
+
+  <!-- faint starfield -->
+  <g fill="#FFFFFF">
+    <circle cx="320" cy="240" r="2.2" opacity="0.6"/>
+    <circle cx="540" cy="900" r="1.6" opacity="0.4"/>
+    <circle cx="880" cy="380" r="2" opacity="0.5"/>
+    <circle cx="2180" cy="320" r="1.8" opacity="0.5"/>
+    <circle cx="2360" cy="980" r="2.2" opacity="0.55"/>
+    <circle cx="2020" cy="1140" r="1.5" opacity="0.35"/>
+    <circle cx="700" cy="1180" r="1.8" opacity="0.45"/>
+    <circle cx="1240" cy="180" r="1.6" opacity="0.4"/>
+    <circle cx="430" cy="560" r="1.4" opacity="0.3"/>
+    <circle cx="2280" cy="640" r="1.6" opacity="0.4"/>
+  </g>
+
+  <!-- the nova spark, off-centre, calm -->
+  <g opacity="0.96">
+    <circle cx="1560" cy="720" r="240" fill="#FFFFFF" opacity="0.06"/>
+    <path d="M1560 470
+             C1566 632 1576 690 1660 734
+             C1744 778 1772 780 1820 720
+             C1772 780 1744 786 1660 830
+             C1576 874 1566 930 1560 1010
+             C1554 930 1544 874 1460 830
+             C1376 786 1348 780 1300 720
+             C1348 780 1376 778 1460 734
+             C1544 690 1554 632 1560 470 Z"
+          fill="url(#spark)"/>
+  </g>
+</svg>

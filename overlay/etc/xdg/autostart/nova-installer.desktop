@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Install NOVA
+Exec=/usr/local/bin/nova-installer-autostart
+Terminal=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

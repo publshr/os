@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=NOVA
+Description=NOVA boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/nova
+ScriptFile=/usr/share/plymouth/themes/nova/nova.script

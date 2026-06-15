@@ -1,0 +1,60 @@
+name: Build NOVA ISO
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore: [ 'README.md', '.gitignore' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free up disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          large-packages: false
+          docker-images: true
+
+      - name: Build the NOVA ISO
+        run: |
+          chmod +x build/*.sh
+          find overlay/usr/local/bin -type f -exec chmod +x {} +
+          sudo WORK="$PWD/build/out" ISO_OUT="$PWD/nova.iso" build/build.sh
+          ls -lh nova.iso
+
+      - name: Boot-test in QEMU (UEFI + BIOS) and screenshot
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 ovmf imagemagick python3
+          chmod +x build/qemu-smoke.sh
+          build/qemu-smoke.sh "$PWD/nova.iso" uefi shots || true
+          build/qemu-smoke.sh "$PWD/nova.iso" bios shots || true
+          ls -l shots || true
+
+      - name: Upload boot screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-screenshots
+          path: shots/
+          retention-days: 7
+
+      - name: Upload ISO to Cloudflare R2
+        if: ${{ success() }}
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET:     ${{ secrets.R2_BUCKET }}
+        run: |
+          if [ -z "${R2_ACCOUNT_ID:-}" ]; then echo "No R2 secrets — skipping upload"; exit 0; fi
+          ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+          aws s3 cp "$PWD/nova.iso" "s3://${R2_BUCKET}/nova-installer-x86_64.iso" \
+            --endpoint-url "$ENDPOINT" --no-progress
+          echo "Uploaded nova-installer-x86_64.iso"

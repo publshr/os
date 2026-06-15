@@ -1,0 +1,6 @@
+#!/bin/sh
+# Launches the NOVA installer — but ONLY in the live (installer) session.
+# On an installed NOVA it does nothing, so the installer never reappears.
+grep -q boot=casper /proc/cmdline || exit 0
+sleep 3                       # let the GNOME session settle
+exec sudo -E calamares

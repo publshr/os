@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA Setup
+Exec=/usr/local/bin/nova-driver-setup
+Terminal=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=8

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# NOVA — first-login hardware/driver setup. Detects the PC's graphics
+# hardware, and if a better (proprietary) driver is available, offers to
+# install it in one click, then offers to restart. Runs once per user.
+# No terminal/code shown — just a friendly NOVA dialog.
+set -u
+
+# Never run in the live installer session — only on an installed NOVA.
+grep -q boot=casper /proc/cmdline && exit 0
+
+STAMP="$HOME/.config/nova/driver-setup.done"
+mkdir -p "$(dirname "$STAMP")"
+[ -f "$STAMP" ] && exit 0
+
+have() { command -v "$1" >/dev/null 2>&1; }
+ask()  { zenity "$@" 2>/dev/null; }
+
+# What does this PC have, and is there a recommended proprietary driver?
+recommended=""
+if have ubuntu-drivers; then
+  # e.g. "driver   : nvidia-driver-550 - distro non-free recommended"
+  recommended="$(ubuntu-drivers devices 2>/dev/null \
+    | awk -F': ' '/recommended/ {gsub(/ .*/,"",$2); print $2; exit}')"
+fi
+
+# Mark done early so we never nag twice even if the user closes the dialog.
+touch "$STAMP"
+
+if [ -z "$recommended" ]; then
+  # Nothing proprietary to add — the open driver already runs the hardware.
+  exit 0
+fi
+
+if ! have zenity; then
+  pkexec ubuntu-drivers install >/dev/null 2>&1 || true
+  exit 0
+fi
+
+if ask --question --no-wrap --title "NOVA" \
+     --ok-label "Install" --cancel-label "Not now" \
+     --text "NOVA found a graphics driver for your computer.\n\nInstall it now for the best speed and smoothest display?"
+then
+  ( echo "10"; pkexec ubuntu-drivers install >/tmp/nova-driver.log 2>&1; echo "100" ) \
+    | ask --progress --pulsate --auto-close --no-cancel --title "NOVA" \
+          --text "Installing your graphics driver…"
+
+  if ask --question --no-wrap --title "NOVA" \
+       --ok-label "Restart now" --cancel-label "Later" \
+       --text "Your graphics driver is installed.\n\nRestart now to finish?"
+  then
+    pkexec systemctl reboot || true
+  fi
+fi

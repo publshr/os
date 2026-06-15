@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NOVA — Open Windows App
+Comment=Open a Windows program (.exe / .msi)
+Exec=/usr/local/bin/nova-open-exe %f
+Icon=/usr/share/nova/logo.png
+Terminal=false
+NoDisplay=true
+MimeType=application/x-ms-dos-executable;application/x-msi;application/vnd.microsoft.portable-executable;application/x-msdownload;

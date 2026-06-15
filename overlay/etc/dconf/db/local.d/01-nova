@@ -1,0 +1,26 @@
+# NOVA GNOME defaults — wallpaper, dark theme, bottom dock, clean favourites.
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/backgrounds/nova.png'
+picture-uri-dark='file:///usr/share/backgrounds/nova.png'
+primary-color='#170B33'
+picture-options='zoom'
+
+[org/gnome/desktop/screensaver]
+picture-uri='file:///usr/share/backgrounds/nova.png'
+primary-color='#170B33'
+
+[org/gnome/desktop/interface]
+color-scheme='prefer-dark'
+gtk-theme='Adwaita-dark'
+enable-hot-corners=false
+
+[org/gnome/shell]
+favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop', 'org.gnome.Maps.desktop']
+enabled-extensions=['dash-to-dock@micxgx.gmail.com']
+
+[org/gnome/shell/extensions/dash-to-dock]
+dock-position='BOTTOM'
+dock-fixed=true
+extend-height=false
+show-trash=false
+show-mounts=false

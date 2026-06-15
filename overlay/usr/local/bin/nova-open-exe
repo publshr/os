@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# NOVA — open a Windows .exe / .msi. Sets up the Windows compatibility layer
+# once, silences Wine's Linux-y Mono/Gecko nag popups, and shows a NOVA
+# dialog with the reason if anything fails — never a silent no-op.
+set -u
+
+export WINEPREFIX="$HOME/.nova-windows"
+export WINEDLLOVERRIDES="mscoree=;mshtml="
+export WINEDEBUG="-all"
+LOG="$HOME/.nova-windows-last.log"
+
+f="${1:-}"
+[ -z "$f" ] && exit 0
+
+notify() { command -v zenity >/dev/null && zenity "$@" >/dev/null 2>&1 || true; }
+
+if [ ! -d "$WINEPREFIX" ]; then
+  ( notify --info --no-wrap --title "NOVA" \
+      --text "Setting up Windows app support — one moment…" ) &
+  INFO=$!
+  wineboot --init  >"$LOG" 2>&1 || true
+  wineserver -w 2>/dev/null || true
+  kill "$INFO" 2>/dev/null || true
+fi
+
+case "${f,,}" in
+  *.msi) set -- msiexec /i "$f" ;;
+  *)     set -- "$f" ;;
+esac
+
+if ! wine "$@" >"$LOG" 2>&1; then
+  notify --error --title "NOVA" --width 480 \
+    --text "This app couldn't open.
+
+$(tail -n 12 "$LOG" 2>/dev/null)"
+fi

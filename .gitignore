@@ -1,0 +1,10 @@
+# build artifacts
+build/out/
+build/chroot/
+build/image/
+*.iso
+*.ppm
+*.img
+*.efi
+shots/
+.DS_Store

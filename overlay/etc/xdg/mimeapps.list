@@ -1,0 +1,5 @@
+[Default Applications]
+application/x-ms-dos-executable=nova-exe.desktop
+application/x-msi=nova-exe.desktop
+application/vnd.microsoft.portable-executable=nova-exe.desktop
+application/x-msdownload=nova-exe.desktop
