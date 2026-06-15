@@ -31,10 +31,18 @@ jobs:
         run: |
           sudo apt-get update -q
           sudo apt-get install -y --no-install-recommends qemu-system-x86 ovmf imagemagick python3
+          # Grant KVM access if the runner exposes it (fast boot → reaches desktop).
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
+          ls -l /dev/kvm 2>/dev/null || echo "no /dev/kvm — will use TCG"
           chmod +x build/qemu-smoke.sh
           build/qemu-smoke.sh "$PWD/nova.iso" uefi shots || true
           build/qemu-smoke.sh "$PWD/nova.iso" bios shots || true
+          echo "=== captured screenshots ==="
           ls -l shots || true
+          # Fail loudly if QEMU captured nothing — a silent 'pass' is what bit us.
+          if [ -z "$(ls -A shots 2>/dev/null)" ]; then
+            echo "ERROR: QEMU produced no screenshots — boot-test did not run."; exit 1
+          fi
 
       - name: Upload boot screenshots
         if: always()

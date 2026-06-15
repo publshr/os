@@ -1,0 +1,9 @@
+# Early KMS: load the GPU driver inside the initramfs so the display comes up
+# at native resolution immediately. Without this the boot starts on a tiny/huge
+# generic framebuffer (big, broken-looking items) and stalls until the driver
+# loads late. Listing all common drivers is safe — absent hardware just skips.
+i915
+xe
+amdgpu
+radeon
+nouveau

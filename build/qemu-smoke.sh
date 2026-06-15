@@ -7,12 +7,11 @@ ISO="$1"; MODE="${2:-uefi}"; OUT="${3:-shots}"
 mkdir -p "$OUT"
 QMP="/tmp/qmp-$MODE.sock"; rm -f "$QMP"
 
-# Try KVM, fall back to TCG automatically. GitHub runners expose /dev/kvm but
-# often deny access (permission), so never hard-select kvm — let QEMU fall back.
-ACCEL="kvm:tcg"
-echo "QEMU smoke: mode=$MODE accel=$ACCEL"
+# KVM if available, else TCG. The fallback form is valid ONLY on -machine
+# accel= (NOT on -accel, which rejects "kvm:tcg").
+echo "QEMU smoke: mode=$MODE (accel kvm->tcg)"
 
-ARGS=( -m 4096 -smp 2 -accel "$ACCEL" -machine q35
+ARGS=( -m 4096 -smp 2 -machine "q35,accel=kvm:tcg"
        -cdrom "$ISO" -boot d -display none -vga virtio
        -qmp "unix:$QMP,server,nowait" -no-reboot )
 
