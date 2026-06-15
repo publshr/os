@@ -7,7 +7,9 @@ ISO="$1"; MODE="${2:-uefi}"; OUT="${3:-shots}"
 mkdir -p "$OUT"
 QMP="/tmp/qmp-$MODE.sock"; rm -f "$QMP"
 
-ACCEL=tcg; [ -e /dev/kvm ] && ACCEL=kvm
+# Try KVM, fall back to TCG automatically. GitHub runners expose /dev/kvm but
+# often deny access (permission), so never hard-select kvm — let QEMU fall back.
+ACCEL="kvm:tcg"
 echo "QEMU smoke: mode=$MODE accel=$ACCEL"
 
 ARGS=( -m 4096 -smp 2 -accel "$ACCEL" -machine q35
@@ -22,7 +24,7 @@ if [ "$MODE" = uefi ]; then
           -drive "if=pflash,format=raw,unit=1,file=/tmp/vars-$MODE.fd" )
 fi
 
-timeout 760 qemu-system-x86_64 "${ARGS[@]}" &
+timeout 980 qemu-system-x86_64 "${ARGS[@]}" &
 QPID=$!
 
 python3 - "$QMP" "$OUT" "$MODE" <<'PY'

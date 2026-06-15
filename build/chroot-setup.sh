@@ -30,18 +30,24 @@ echo "==> kernel (HWE for best support on newer hardware)"
 apt-get install -y --no-install-recommends linux-generic-hwe-24.04 \
   || apt-get install -y --no-install-recommends linux-generic
 
-echo "==> GNOME desktop (minimal, no Ubuntu clutter)"
-apt-get install -y --no-install-recommends \
-  gnome-shell gnome-session gdm3 nautilus \
-  gnome-control-center gnome-system-monitor \
+echo "==> GNOME desktop + full graphics stack (so the session actually starts)"
+# NOTE: deliberately NOT --no-install-recommends here — a stripped GNOME boots
+# to a frozen blank because session pieces (settings-daemon, portals, Xorg,
+# mesa) are 'recommends'. gnome-core is the curated, known-good functional set.
+apt-get install -y \
+  gnome-core gdm3 nautilus gnome-control-center gnome-system-monitor \
+  network-manager-gnome \
+  xserver-xorg xwayland dbus-x11 \
+  libgl1-mesa-dri mesa-vulkan-drivers \
+  linux-firmware \
   plymouth plymouth-themes zenity \
   xdg-user-dirs dconf-cli librsvg2-bin \
   software-properties-gtk unattended-upgrades
 
 # Nice-to-haves (never fail the build if a package name drifts)
-soft apt-get install -y --no-install-recommends \
-  gnome-shell-extension-prefs gnome-disk-utility gnome-text-editor \
-  file-roller fonts-inter gnome-shell-extension-dashtodock gnome-maps
+soft apt-get install -y \
+  gnome-disk-utility gnome-text-editor file-roller fonts-inter \
+  gnome-shell-extension-dashtodock gnome-maps
 
 echo "==> Calamares installer"
 apt-get install -y --no-install-recommends calamares || apt-get install -y calamares
@@ -92,7 +98,11 @@ cp -f /usr/share/nova/logo.png /usr/share/plymouth/themes/nova/logo.png
 echo "FRAMEBUFFER=y" > /etc/initramfs-tools/conf.d/splash
 update-alternatives --install /usr/share/plymouth/themes/default.plymouth \
   default.plymouth /usr/share/plymouth/themes/nova/nova.plymouth 200
-soft plymouth-set-default-theme nova
+update-alternatives --set default.plymouth /usr/share/plymouth/themes/nova/nova.plymouth || true
+soft plymouth-set-default-theme -R nova
+# CRUCIAL: bake the NOVA splash INTO the initramfs, or the live boot (which
+# runs from the initramfs) still shows Ubuntu's splash from the first frame.
+soft update-initramfs -u -k all
 
 echo "==> branding: GRUB (hidden menu, NOVA name)"
 soft update-grub
