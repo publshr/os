@@ -1,7 +1,7 @@
 # NOVA boot screenshots
 
 Auto-captured in CI by booting the ISO in QEMU (UEFI + BIOS).
-Build run: 27593361469 — commit 1a6f759
+Build run: 27595577887 — commit 5124afb
 
 - bios-045s.png
 - bios-120s.png
