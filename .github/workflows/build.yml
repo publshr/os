@@ -4,12 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths-ignore: [ 'README.md', '.gitignore' ]
+    paths-ignore: [ 'README.md', '.gitignore', 'screenshots/**' ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 150
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -51,6 +53,28 @@ jobs:
           name: boot-screenshots
           path: shots/
           retention-days: 7
+
+      - name: Publish screenshots to the repo (so they're always viewable)
+        if: always()
+        run: |
+          git config user.name "nova-ci"
+          git config user.email "ci@nova.local"
+          mkdir -p screenshots
+          rm -f screenshots/*.png
+          cp shots/*.png screenshots/ 2>/dev/null || true
+          # a tiny index so the GitHub folder view is self-explanatory
+          {
+            echo "# NOVA boot screenshots"
+            echo ""
+            echo "Auto-captured in CI by booting the ISO in QEMU (UEFI + BIOS)."
+            echo "Build run: ${{ github.run_id }} — commit ${GITHUB_SHA:0:7}"
+            echo ""
+            for f in screenshots/*.png; do [ -e "$f" ] && echo "- $(basename "$f")"; done
+          } > screenshots/README.md
+          git add screenshots
+          git commit -m "ci: boot screenshots from run ${{ github.run_id }}" || { echo "no changes"; exit 0; }
+          git pull --rebase origin main || true
+          git push origin HEAD:main || true
 
       - name: Upload ISO to Cloudflare R2
         if: ${{ success() }}
