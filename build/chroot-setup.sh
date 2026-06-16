@@ -107,7 +107,20 @@ soft update-initramfs -u -k all
 echo "==> branding: GRUB (hidden menu, NOVA name)"
 soft update-grub
 
-echo "==> branding: GNOME defaults (wallpaper, dark, dock, favourites)"
+echo "==> NOVA shell: custom top bar + launcher extension"
+install -d /usr/share/gnome-shell/extensions
+cp -r "$B/shell/novalogo@nova.local" /usr/share/gnome-shell/extensions/
+
+echo "==> branding: distributor logo icon (About / greeter / LOGO=)"
+install -d /usr/share/icons/hicolor/scalable/apps /usr/share/pixmaps
+cp "$B/logo.svg" /usr/share/icons/hicolor/scalable/apps/nova-logo.svg || true
+cp "$B/logo.svg" /usr/share/pixmaps/nova-logo.svg || true
+gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
+
+# Drop Yaru/Ubuntu look if anything pulled it in (gnome-core usually doesn't).
+soft apt-get purge -y yaru-theme-gtk yaru-theme-icon yaru-theme-sound yaru-theme-gnome-shell
+
+echo "==> branding: compile GNOME defaults (wallpaper, dark, dock, NOVA shell + greeter)"
 dconf update || true
 
 echo "==> de-Ubuntu: remove snap + nags"

@@ -1,0 +1,9 @@
+[org/gnome/login-screen]
+logo='/usr/share/nova/logo.png'
+banner-message-enable=false
+disable-user-list=false
+
+[org/gnome/desktop/interface]
+color-scheme='prefer-dark'
+gtk-theme='Adwaita'
+icon-theme='Adwaita'

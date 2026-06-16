@@ -1,0 +1,39 @@
+/* NOVA top bar — slim, dark-violet, branded. Additive over Adwaita. */
+#panel {
+    background-color: rgba(16, 9, 34, 0.92);
+    height: 30px;
+    border: none;
+    box-shadow: 0 1px 0 0 rgba(124, 92, 255, 0.18);
+}
+
+#panel .panel-button {
+    color: #E7E3FF;
+    -natural-hpadding: 8px;
+    -minimum-hpadding: 6px;
+    border-radius: 9px;
+}
+
+#panel .panel-button:hover,
+#panel .panel-button:focus,
+#panel .panel-button:active,
+#panel .panel-button:overview,
+#panel .panel-button:checked {
+    background-color: rgba(124, 92, 255, 0.28);
+    color: #FFFFFF;
+}
+
+/* the clock in the centre */
+#panel .clock-display .clock {
+    color: #F2EFFF;
+    font-weight: 600;
+}
+
+/* NOVA logo button (left) */
+.nova-logo-button { -natural-hpadding: 10px; }
+.nova-logo-icon { icon-size: 20px; }
+
+/* quick-settings / popovers picking up the NOVA accent */
+.quick-toggle:checked,
+.quick-slider .slider {
+    background-color: #7C5CFF;
+}

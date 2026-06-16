@@ -1,0 +1,7 @@
+{
+  "uuid": "novalogo@nova.local",
+  "name": "NOVA Shell",
+  "description": "NOVA top-bar: logo launcher + branded styling.",
+  "shell-version": ["46", "47", "48"],
+  "version": 1
+}
