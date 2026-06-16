@@ -1,32 +1,33 @@
-# NOVA desktop defaults — wallpaper, dark, NOVA shell + floating dock.
-[org/gnome/desktop/background]
-picture-uri='file:///usr/share/backgrounds/nova.png'
-picture-uri-dark='file:///usr/share/backgrounds/nova.png'
-primary-color='#170B33'
-picture-options='zoom'
-
-[org/gnome/desktop/screensaver]
-picture-uri='file:///usr/share/backgrounds/nova.png'
-primary-color='#170B33'
-
+# NOVA desktop defaults — clean, minimal, LIGHT. NOVA shell + floating dock.
 [org/gnome/desktop/interface]
-color-scheme='prefer-dark'
+color-scheme='default'
 gtk-theme='Adwaita'
 icon-theme='Adwaita'
 cursor-theme='Adwaita'
 enable-hot-corners=false
 clock-show-weekday=true
+font-name='Inter 11'
+
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/backgrounds/nova.png'
+picture-uri-dark='file:///usr/share/backgrounds/nova.png'
+primary-color='#F4F2FA'
+picture-options='zoom'
+
+[org/gnome/desktop/screensaver]
+picture-uri='file:///usr/share/backgrounds/nova.png'
+primary-color='#F4F2FA'
 
 [org/gnome/desktop/sound]
 theme-name='freedesktop'
 event-sounds=false
 
 [org/gnome/shell]
-favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Settings.desktop']
+favorite-apps=['firefox.desktop', 'org.gnome.Epiphany.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Software.desktop', 'org.gnome.Settings.desktop']
 enabled-extensions=['dash-to-dock@micxgx.gmail.com', 'novalogo@nova.local']
 disable-user-extensions=false
 
-# Floating, centred bottom dock — Mac feel, NOVA-tinted.
+# Floating, centred bottom dock — light, minimal.
 [org/gnome/shell/extensions/dash-to-dock]
 dock-position='BOTTOM'
 dock-fixed=false
@@ -38,9 +39,9 @@ show-mounts=false
 show-apps-at-top=true
 show-show-apps-button=true
 transparency-mode='FIXED'
-background-opacity=0.50
+background-opacity=0.70
 custom-background-color=true
-background-color='#170B33'
+background-color='#FFFFFF'
 custom-theme-shrink=true
 dash-max-icon-size=46
 running-indicator-style='DOTS'

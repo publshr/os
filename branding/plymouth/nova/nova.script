@@ -1,9 +1,8 @@
-// NOVA boot splash — a centered logo on a deep, calm gradient.
-// Deliberately simple: a static, correctly-sized logo never garbles or
-// freezes the way scripted animations can on unknown framebuffers.
+// NOVA boot splash — clean, minimal, white. Centered logo on a soft white
+// background. Static-sized so it never garbles on an unknown framebuffer.
 
-Window.SetBackgroundTopColor(0.09, 0.04, 0.18);     // deep violet
-Window.SetBackgroundBottomColor(0.03, 0.01, 0.06);  // near-black
+Window.SetBackgroundTopColor(1.0, 1.0, 1.0);      // white
+Window.SetBackgroundBottomColor(0.96, 0.96, 0.98); // faint cool white
 
 logo.image  = Image("logo.png");
 logo.sprite = Sprite(logo.image);
@@ -11,15 +10,13 @@ logo.sprite.SetX(Window.GetX(0) + Window.GetWidth(0)  / 2 - logo.image.GetWidth(
 logo.sprite.SetY(Window.GetY(0) + Window.GetHeight(0) / 2 - logo.image.GetHeight() / 2);
 logo.sprite.SetOpacity(1);
 
-// A gentle breathing opacity so it reads as "working", not "hung".
-// Uses only Math.Sin (core Plymouth script) — no images to misscale.
+// Gentle breathing so it reads as "working", not "frozen".
 progress = 0;
 fun refresh() {
     progress = progress + 1;
-    logo.sprite.SetOpacity(0.80 + 0.20 * Math.Sin(progress / 18));
+    logo.sprite.SetOpacity(0.82 + 0.18 * Math.Sin(progress / 18));
 }
 Plymouth.SetRefreshFunction(refresh);
 
-// Required hooks (kept minimal; no disk-password prompt — NOVA isn't encrypted).
 fun message(text) { }
 Plymouth.SetMessageFunction(message);

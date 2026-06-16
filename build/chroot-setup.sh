@@ -19,11 +19,18 @@ update-locale LANG=en_US.UTF-8
 echo "nova" > /etc/hostname
 
 echo "==> base live system + bootloaders (signed Secure Boot chain)"
+# grub-install for UEFI needs efibootmgr (to write the boot entry) and the
+# install needs the filesystem tools (mkfs.vfat for the ESP, mkfs.ext4 for /).
+# These are 'Recommends', so they MUST be listed explicitly under
+# --no-install-recommends or the bootloader/format step fails (error code 1).
+# Use the grub *-bin packages (not the grub-pc/grub-efi metapackages, which
+# conflict with each other and run disk-install postinst).
 apt-get install -y --no-install-recommends \
   sudo ubuntu-standard casper discover laptop-detect os-prober \
   network-manager network-manager-gnome wpasupplicant locales \
-  grub-common grub2-common grub-pc grub-pc-bin \
-  grub-efi-amd64-bin grub-efi-amd64-signed shim-signed \
+  grub-common grub2-common grub-pc-bin \
+  grub-efi-amd64-bin grub-efi-amd64-signed shim-signed efibootmgr \
+  dosfstools e2fsprogs parted gdisk \
   ca-certificates curl gnupg
 
 echo "==> kernel (HWE for best support on newer hardware)"
@@ -52,7 +59,10 @@ soft apt-get install -y \
 echo "==> Calamares installer"
 apt-get install -y --no-install-recommends calamares || apt-get install -y calamares
 
-echo "==> Firefox (real .deb, not snap) from Mozilla"
+echo "==> Browser: GNOME Web always present, plus try Firefox (.deb) from Mozilla"
+# A browser that is GUARANTEED to exist (universe .deb, no snap).
+soft apt-get install -y --no-install-recommends epiphany-browser
+# Firefox as a real .deb (not snap) — best effort; GNOME Web is the fallback.
 install -d -m0755 /etc/apt/keyrings
 if curl -fsSL https://packages.mozilla.org/apt/repo-signing-key.gpg -o /etc/apt/keyrings/packages.mozilla.org.asc; then
   echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" \
@@ -62,6 +72,9 @@ if curl -fsSL https://packages.mozilla.org/apt/repo-signing-key.gpg -o /etc/apt/
   apt-get update -q || true
   soft apt-get install -y firefox
 fi
+
+echo "==> Software app + updates (so 'Software' actually opens and updates work)"
+soft apt-get install -y gnome-software packagekit
 
 echo "==> Wine + .exe support (WineHQ, i386 multiarch)"
 dpkg --add-architecture i386

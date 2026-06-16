@@ -6,6 +6,11 @@ on:
     branches: [ main ]
     paths-ignore: [ 'README.md', '.gitignore', 'screenshots/**' ]
 
+# Only one build at a time — a new push cancels the previous in-progress build.
+concurrency:
+  group: nova-build
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
