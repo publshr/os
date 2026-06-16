@@ -7,12 +7,16 @@ ISO="$1"; MODE="${2:-uefi}"; OUT="${3:-shots}"
 mkdir -p "$OUT"
 QMP="/tmp/qmp-$MODE.sock"; rm -f "$QMP"
 
+# A blank target disk so Calamares has somewhere to install (a real PC has one).
+DISK="/tmp/nova-disk-$MODE.raw"; rm -f "$DISK"; truncate -s 25G "$DISK"
+
 # KVM if available, else TCG. The fallback form is valid ONLY on -machine
 # accel= (NOT on -accel, which rejects "kvm:tcg").
 echo "QEMU smoke: mode=$MODE (accel kvm->tcg)"
 
 ARGS=( -m 4096 -smp 2 -machine "q35,accel=kvm:tcg"
        -cdrom "$ISO" -boot d -display none -vga virtio
+       -drive "file=$DISK,if=virtio,format=raw"
        -qmp "unix:$QMP,server,nowait" -no-reboot )
 
 if [ "$MODE" = uefi ]; then

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Install NOVA
+GenericName=Installer
+Comment=Install NOVA on this computer
+Exec=sudo -E calamares
+Icon=/usr/share/nova/logo.png
+Terminal=false
+Categories=System;
+StartupWMClass=calamares
+NoDisplay=false
